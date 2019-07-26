@@ -138,3 +138,4 @@ SDFrame *sensorFrameDeal(unsigned char *recvBuff, int recvBuffLen);   //传感�
 wthData weatherDataDeal(unsigned char *recvBuff);   //气象类数据解析函数
 //unsigned char* byteReverse(unsigned char* c, int strLen);
 
+
