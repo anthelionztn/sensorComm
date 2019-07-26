@@ -3,4 +3,4 @@ project(sensorComm C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(sensorComm main.c)
+add_executable(sensorComm main.c sensorComm.h sensorComm.c)
