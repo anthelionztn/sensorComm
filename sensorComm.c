@@ -3,9 +3,9 @@
 //
 #include "sensorComm.h"
 extern SDFrame recvFrame;
-extern unsigned char sendData[];
+extern uint8_t sendData[];
 
-SDFrame *sensorFrameDeal(unsigned char *recvBuff, int recvBuffLen){
+SDFrame *sensorFrameDeal(uint8_t *recvBuff, int recvBuffLen){
     if (recvBuff[0]!=0xFE||recvBuff[recvBuffLen-1]!=0xBE||(recvBuff[2]<<8|recvBuff[1])!= recvBuffLen){  //判断首位帧及帧长
         return NULL;
     } else{
@@ -16,9 +16,9 @@ SDFrame *sensorFrameDeal(unsigned char *recvBuff, int recvBuffLen){
         recvFrame.targetChannel = recvBuff[6];
         recvFrame.checkSum = recvBuff[recvBuffLen-2];
 //待插入各类型数据解析函数
-        switch (recvFrame.funcCode){
+        switch ((int)recvFrame.funcCode){
             case 0x01: recvFrame.dataType.weatherData = weatherDataDeal(recvBuff); //解析气象类型数据
-            case 0x02: recvFrame.dataType.passingVehicleData = passingVehicleDataDeal(recvBuff);    //解析过车类型数据
+            //case 0x02: recvFrame.dataType.passingVehicleData = passingVehicleDataDeal(recvBuff);    //解析过车类型数据
 
         }
 
@@ -27,7 +27,7 @@ SDFrame *sensorFrameDeal(unsigned char *recvBuff, int recvBuffLen){
     }
 }
 
-wthData weatherDataDeal(unsigned char *recvBuff){   //气象类数据解析函数
+wthData weatherDataDeal(uint8_t *recvBuff){   //气象类数据解析函数
     wthData weatherData;
     weatherData.equipmentTime.year = recvBuff[7];
     weatherData.equipmentTime.month = recvBuff[8];
@@ -52,7 +52,7 @@ wthData weatherDataDeal(unsigned char *recvBuff){   //气象类数据解析函�
     return weatherData;
 }
 
-pVData passingVehicleDataDeal(unsigned char *recvBuff){ //过车类数据解析函数
+pVData passingVehicleDataDeal(uint8_t *recvBuff){ //过车类数据解析函数
     pVData passingVehicleData;
     passingVehicleData.equipmentTime.year = recvBuff[7];
     passingVehicleData.equipmentTime.month = recvBuff[8];
