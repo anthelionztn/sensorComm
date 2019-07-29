@@ -18,6 +18,7 @@ SDFrame *sensorFrameDeal(unsigned char *recvBuff, int recvBuffLen){
 //待插入各类型数据解析函数
         switch (recvFrame.funcCode){
             case 0x01: recvFrame.dataType.weatherData = weatherDataDeal(recvBuff); //解析气象类型数据
+            case 0x02: recvFrame.dataType.passingVehicleData = passingVehicleDataDeal(recvBuff);    //解析过车类型数据
 
         }
 
@@ -26,7 +27,7 @@ SDFrame *sensorFrameDeal(unsigned char *recvBuff, int recvBuffLen){
     }
 }
 
-wthData weatherDataDeal(unsigned char *recvBuff){
+wthData weatherDataDeal(unsigned char *recvBuff){   //气象类数据解析函数
     wthData weatherData;
     weatherData.equipmentTime.year = recvBuff[7];
     weatherData.equipmentTime.month = recvBuff[8];
@@ -51,6 +52,17 @@ wthData weatherDataDeal(unsigned char *recvBuff){
     return weatherData;
 }
 
-//pVData passingVehicleDataDeal(unsigned char *recvBuff){
-//    pVData passing
-//}
+pVData passingVehicleDataDeal(unsigned char *recvBuff){ //过车类数据解析函数
+    pVData passingVehicleData;
+    passingVehicleData.equipmentTime.year = recvBuff[7];
+    passingVehicleData.equipmentTime.month = recvBuff[8];
+    passingVehicleData.equipmentTime.day = recvBuff[9];
+    passingVehicleData.equipmentTime.hour = recvBuff[10];
+    passingVehicleData.equipmentTime.minute = recvBuff[11];
+    passingVehicleData.equipmentTime.second = recvBuff[12];
+    passingVehicleData.lane = recvBuff[13];
+    passingVehicleData.vehicleSpeed = recvBuff[15]<<8|recvBuff[14];
+    passingVehicleData.vehicleLength = recvBuff[17]<<8|recvBuff[16];
+    passingVehicleData.type = recvBuff[18];
+    return  passingVehicleData;
+}

@@ -136,6 +136,7 @@ typedef struct SensorDataFrame{
 //函数声明区：
 SDFrame *sensorFrameDeal(unsigned char *recvBuff, int recvBuffLen);   //传感器数据解析函数
 wthData weatherDataDeal(unsigned char *recvBuff);   //气象类数据解析函数
-//unsigned char* byteReverse(unsigned char* c, int strLen);
+pVData passingVehicleDataDeal(unsigned char *recvBuff); //过车类数据解析函数
+
 
 
