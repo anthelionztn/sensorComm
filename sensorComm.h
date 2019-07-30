@@ -141,7 +141,7 @@ typedef struct SensorDataFrame{
 
 //--------------------------------------------------------------------------
 //函数声明区：
-SDFrame *sensorFrameDeal(uint8_t *recvBuff, int recvBuffLen);   //传感器数据解析函数
+void sensorFrameDeal(char *recvBuff, int *recvBuffLen);   //传感器数据解析函数
 wthData weatherDataDeal(uint8_t *recvBuff);   //气象类数据解析函数
 pVData passingVehicleDataDeal(uint8_t *recvBuff); //过车类数据解析函数
 

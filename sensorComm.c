@@ -3,31 +3,31 @@
 //
 #include "sensorComm.h"
 extern SDFrame recvFrame;
-extern uint8_t sendData[];
+extern char sendData[];
 
-SDFrame *sensorFrameDeal(uint8_t *recvBuff, int recvBuffLen){
-    if (recvBuff[0]!=0xFE||recvBuff[recvBuffLen-1]!=0xBE||(recvBuff[2]<<8|recvBuff[1])!= recvBuffLen){  //判断首位帧及帧长
-        return NULL;
+void sensorFrameDeal(char *recvBuff, int *recvBuffLen){
+    uint8_t unsigned_recvBuff[*recvBuffLen];
+    memcpy(unsigned_recvBuff,recvBuff,*recvBuffLen);
+    if (unsigned_recvBuff[0]!=0xFE||unsigned_recvBuff[*recvBuffLen-1]!=0xBE||(unsigned_recvBuff[2]<<8|unsigned_recvBuff[1])!= *recvBuffLen){  //判断首位帧及帧长
+        printf("This is not a complete frame!");
     } else{
         recvFrame.header = 0xFE;
-        recvFrame.frameLength = recvBuffLen;
-        recvFrame.funcCode = recvBuff[3];
-        recvFrame.targetID = recvBuff[5]<<8|recvBuff[4];
-        recvFrame.targetChannel = recvBuff[6];
-        recvFrame.checkSum = recvBuff[recvBuffLen-2];
+        recvFrame.frameLength = *recvBuffLen;
+        recvFrame.funcCode = unsigned_recvBuff[3];
+        recvFrame.targetID = unsigned_recvBuff[5]<<8|unsigned_recvBuff[4];
+        recvFrame.targetChannel = unsigned_recvBuff[6];
+        recvFrame.checkSum = unsigned_recvBuff[*recvBuffLen-2];
 //待插入各类型数据解析函数
         switch (recvFrame.funcCode){
             case 0x01:
-                recvFrame.dataType.weatherData = weatherDataDeal(recvBuff); //解析气象类型数据
+                recvFrame.dataType.weatherData = weatherDataDeal(unsigned_recvBuff); //解析气象类型数据
                 break;
             case 0x02:
-                recvFrame.dataType.passingVehicleData = passingVehicleDataDeal(recvBuff);    //解析过车类型数据
+                recvFrame.dataType.passingVehicleData = passingVehicleDataDeal(unsigned_recvBuff);    //解析过车类型数据
                 break;
 
         }
-
         recvFrame.tail = 0xBE;
-        return &recvFrame;
     }
 }
 
