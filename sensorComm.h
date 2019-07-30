@@ -11,8 +11,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef unsigned char uint8_t;
-typedef unsigned short uint16_t;
+typedef unsigned char uint8_t;  //1 byte
+typedef unsigned short uint16_t;    //2 byte
+typedef unsigned int uint32_t;  //4 byte
+typedef unsigned long long int uint64_t;    //8 byte
+
+
 
 
 typedef struct equipmentTime{   //设备时间（年月日时分秒）
@@ -53,63 +57,63 @@ typedef struct equipmentStatusData{ //对应功能码：0x03
     eqTime equipmentTime;  //设备时间（年月日时分秒）
     uint8_t programList;   //节目单
     uint8_t illuminationStatus;    //照明状态（0：关闭，1：开启）
-    uint8_t latitude[8];  //纬度
-    uint8_t longitude[8];  //经度
+    uint64_t latitude;  //纬度
+    uint64_t longitude;  //经度
     uint8_t chargeType;    //充电类型（1：市电，2：太阳能）
     uint8_t chargeStatus;  //充电状态（0：未充电，1：充电中）
-    uint8_t chargeVoltage[2];  //充电电压（mV）
-    uint8_t battaryVoltage[2]; //电池电压（mV）
-    uint8_t chargeCurrent[2];  //充电电流（mA）
-    uint8_t workingTemperature[2]; //工作温度（0.01摄氏度）
+    uint16_t chargeVoltage;  //充电电压（mV）
+    uint16_t battaryVoltage; //电池电压（mV）
+    uint16_t chargeCurrent;  //充电电流（mA）
+    uint16_t workingTemperature; //工作温度（0.01摄氏度）
     uint8_t radarHardwareVersion;   //雷达硬件版本
     uint8_t radarSoftwareVersion;  //雷达软件版本
-    uint8_t equipmentDipAngle[2];  //设备倾角（有符号）
-    uint8_t runningTime[4];    //运行时间（秒）
+    uint16_t equipmentDipAngle;  //设备倾角（有符号）
+    uint32_t runningTime;    //运行时间（秒）
     uint8_t cBoardHardwareVersion; //主控板硬件版本
     uint8_t cBoardSoftwareVersion; //主控板软件版本
 }eqpmSData;
 
 typedef struct warning04Data{   //对应功能码：0x04 应急车道占用预警
     uint8_t incidentType;  //事件类型（1：告警，0：解除）
-    uint8_t time[6];  //时间（年月日时分秒）
-    uint8_t distance[2];   //距离（米）
+    eqTime time;  //时间（年月日时分秒）
+    uint16_t distance;   //距离（米）
 }w04Data;
 
 typedef struct warning05Data{   //对应功能码：0x05 现场报警
     uint8_t incidentType;  //事件类型（1：告警，0：解除）
-    uint8_t time[6];  //时间（年月日时分秒）
+    eqTime time;  //时间（年月日时分秒）
 }w05Data;
 
 typedef struct warning06Data{   //对应功能码：0x06 设备状态
     uint8_t incidentType;  //事件类型（1：告警，0：解除）
-    uint8_t time[6];  //时间（年月日时分秒）
+    eqTime time;  //时间（年月日时分秒）
     uint8_t warningType;   //告警类型（1：被撞，2：移动，3：倾倒）
 }w06Data;
 
 typedef struct warning07Data{   //对应功能码：0x07 低电压缺点告警
     uint8_t incidentType;  //事件类型（1：告警，0：解除）
-    uint8_t time[6];  //时间（年月日时分秒）
-    uint8_t voltage[2];    //电压
+    eqTime time;  //时间（年月日时分秒）
+    uint16_t voltage;    //电压
 }w07Data;
 
 typedef struct warning08Data{   //对应功能码：0x08 市电掉电告警
     uint8_t incidentType;  //事件类型（1：告警，0：解除）
-    uint8_t time[6];  //时间（年月日时分秒）
+    eqTime time;  //时间（年月日时分秒）
 }w08Data;
 
 typedef struct paraCtrlA0Data{//对应功能码：0xA0 节目单控制
     uint8_t programListID; //节目单编号
-    uint8_t lightLuminance[2]; //灯板亮度（1-65535）
-    uint8_t blinkDuty[2];  //闪烁占空比（0/1/2）
-    uint8_t blinkFrequency[2]; //闪烁频率（0/1/2/3）
-    uint8_t wakeDelay[2];  //尾迹延时（100~65535毫秒）
+    uint16_t lightLuminance; //灯板亮度（1-65535）
+    uint16_t blinkDuty;  //闪烁占空比（0/1/2）
+    uint16_t blinkFrequency; //闪烁频率（0/1/2/3）
+    uint16_t wakeDelay;  //尾迹延时（100~65535毫秒）
 }pCA0Data;
 
 typedef struct paraCtrlA1Data{//对应功能码：0xA1 路灯照明控制
     uint8_t ctrlType;  //控制方式（1：打开，2：关闭，3：自动）
-    uint8_t lightLuminance[2]; //路灯亮度（1-100）
-    uint8_t turnOnThreshold[2];    //自动控制时低于此值开路灯（1-65535）
-    uint8_t duringTime[2]; //持续时间（自动控制点亮延时，单位秒）
+    uint16_t lightLuminance; //路灯亮度（1-100）
+    uint16_t turnOnThreshold;    //自动控制时低于此值开路灯（1-65535）
+    uint16_t duringTime; //持续时间（自动控制点亮延时，单位秒）
 }pCA1Data;
 
 
@@ -143,3 +147,8 @@ pVData passingVehicleDataDeal(uint8_t *recvBuff); //过车类数据解析函数
 
 
 
+//    //GPS解析方法,备用
+//    double gps;
+//    unsigned char buf[] = {0xda, 0xc7, 0x0a, 0x7e, 0x1b, 0x36, 0x42, 0x40};
+//    gps = *((double*)buf);
+//    printf("%f\n", gps);

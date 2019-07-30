@@ -16,9 +16,13 @@ SDFrame *sensorFrameDeal(uint8_t *recvBuff, int recvBuffLen){
         recvFrame.targetChannel = recvBuff[6];
         recvFrame.checkSum = recvBuff[recvBuffLen-2];
 //待插入各类型数据解析函数
-        switch ((int)recvFrame.funcCode){
-            case 0x01: recvFrame.dataType.weatherData = weatherDataDeal(recvBuff); //解析气象类型数据
-            //case 0x02: recvFrame.dataType.passingVehicleData = passingVehicleDataDeal(recvBuff);    //解析过车类型数据
+        switch (recvFrame.funcCode){
+            case 0x01:
+                recvFrame.dataType.weatherData = weatherDataDeal(recvBuff); //解析气象类型数据
+                break;
+            case 0x02:
+                recvFrame.dataType.passingVehicleData = passingVehicleDataDeal(recvBuff);    //解析过车类型数据
+                break;
 
         }
 
@@ -66,3 +70,17 @@ pVData passingVehicleDataDeal(uint8_t *recvBuff){ //过车类数据解析函数
     passingVehicleData.type = recvBuff[18];
     return  passingVehicleData;
 }
+//
+//eqpmSData equipmentStatusDataDeal(uint8_t *recvBuff){   //设备状态数据解析
+//    eqpmSData equipmentStatusData;
+//    equipmentStatusData.equipmentTime.year = recvBuff[7];
+//    equipmentStatusData.equipmentTime.month = recvBuff[8];
+//    equipmentStatusData.equipmentTime.day = recvBuff[9];
+//    equipmentStatusData.equipmentTime.hour = recvBuff[10];
+//    equipmentStatusData.equipmentTime.minute = recvBuff[11];
+//    equipmentStatusData.equipmentTime.second = recvBuff[12];
+//    equipmentStatusData.programList = recvBuff[13];
+//    equipmentStatusData.illuminationStatus = recvBuff[14];
+//    equipmentStatusData
+//
+//}
