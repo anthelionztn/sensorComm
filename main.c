@@ -18,6 +18,7 @@ char sendData[] = {0xFE, 0x2A, 0x00, 0x01, 0x7E, 0xD0, 0x41,
                             0x00, 0x00,
                             0x00, 0x00,
                             0x82, 0xBE};  //伪造一帧气象数据用于测试
+uint8_t rebuildWeatherDataFrame[43];
 SDFrame recvFrame;
 
 //--------------------------------------------------------------------------
@@ -26,7 +27,11 @@ int main() {
     int temp = sizeof(sendData);
     int *sendDataLen = &temp;
     sensorFrameDeal(sendData, sendDataLen);    //帧数据解析回调函数
-
+    rebuildDataFrame(&recvFrame,1);
+    for(int i = 0; i < 43; i++){
+        printf("%02X ", rebuildWeatherDataFrame[i]);
+    }
+    printf("\n");
     printf("设备时间:20%d年%d月%d日 %d时%d分%d秒\n",
             recvFrame.dataType.weatherData.equipmentTime.year,
             recvFrame.dataType.weatherData.equipmentTime.month,

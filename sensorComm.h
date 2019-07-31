@@ -139,12 +139,25 @@ typedef struct SensorDataFrame{
     uint8_t tail;  //帧尾固定为0xBE
 }SDFrame;
 
+typedef struct _weatherDataFrame2APP{   //用于发送给APP的数据帧
+    uint16_t frameHeader;
+    uint8_t frameID;
+    uint8_t frameMainCmd;
+    uint8_t frameSubCmd;
+    uint8_t frameStatus;
+    uint16_t frameLen;
+    wthData weatherData;
+    uint8_t frameChecksum;
+    uint8_t frameTail;
+}weatherDataFrame2APP;
+
 //--------------------------------------------------------------------------
 //函数声明区：
 void sensorFrameDeal(char *recvBuff, int *recvBuffLen);   //传感器数据解析函数
-wthData weatherDataDeal(uint8_t *recvBuff);   //气象类数据解析函数
-pVData passingVehicleDataDeal(uint8_t *recvBuff); //过车类数据解析函数
-
+void weatherDataDeal(uint8_t *recvBuff);   //气象类数据解析函数
+void passingVehicleDataDeal(uint8_t *recvBuff); //过车类数据解析函数
+void rebuildDataFrame(SDFrame const *recvFrame, int cnt);   //重构数据帧，用于发送给APP
+uint8_t bccChecksum(uint8_t * buf, int indexBegin, int indexEnd);   //BCC校验
 
 
 //    //GPS解析方法,备用
